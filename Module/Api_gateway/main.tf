@@ -22,6 +22,6 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
 resource "aws_apigatewayv2_route" "lambda_route" {
   for_each        = data.aws_s3_bucket_object.config
   api_id    = aws_apigatewayv2_api.api.id
-  route_key = each.value.route
+  route_key = "${each.value.http_Methode} /${each.value.route}"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
