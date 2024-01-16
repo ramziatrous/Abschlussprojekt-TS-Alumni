@@ -1,6 +1,8 @@
-variable "dynamodb_arn" {
-  
+
+variable "lamda_obj" {
+  type = map(string)
 }
-variable "s3_arn" {
+
+variable "role_arn" {
   
 }
