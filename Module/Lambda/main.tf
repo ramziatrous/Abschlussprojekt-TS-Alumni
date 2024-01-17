@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "lambda" {
-  filename      = ""
+  filename      = "./Module/Lambda/index.zip"
   function_name = var.lamda_obj.function_name
   handler       = "index.handler"
   runtime       = "nodejs18.x"
@@ -11,5 +11,5 @@ resource "aws_lambda_permission" "allow_api_gateway_to_invoke_lambda" {
   function_name = aws_lambda_function.lambda.arn
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.users_api.execution_arn}/*/*/${var.lamda_obj.route}"
+  source_arn = "${var.api_execution_arn}/*/*/${var.lamda_obj.route}"
 }
