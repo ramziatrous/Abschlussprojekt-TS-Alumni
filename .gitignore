@@ -33,4 +33,5 @@ override.tf.json
 .terraformrc
 terraform.rc
 *.ter*
-*lam*
+*lambdi*
+*index.zip
