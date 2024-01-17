@@ -22,12 +22,7 @@ resource "aws_iam_policy" "lambda_policy" {
       {
         "Effect" : "Allow",
         "Action" : "*",
-        "Resource" : "${var.dynamodb_arn}"
-      },
-      {
-        Action : "*",
-        Effect : "Allow",
-        Resource : "${var.s3_arn}"
+        "Resource" : "*"
       }
     ]
   })
