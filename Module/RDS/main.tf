@@ -17,7 +17,7 @@ resource "aws_db_proxy" "proxy" {
   debug_logging          = false
   engine_family          = "MYSQL"
   idle_client_timeout    = 1800
-  require_tls            = true
+  require_tls            = false
   role_arn               = aws_iam_role.example.arn
   vpc_security_group_ids = [aws_security_group.example.id]
   vpc_subnet_ids         = [aws_subnet.example.id]
@@ -26,7 +26,7 @@ resource "aws_db_proxy" "proxy" {
     auth_scheme = "SECRETS"
     description = "example"
     iam_auth    = "DISABLED"
-    secret_arn  = aws_secretsmanager_secret.example.arn
+    secret_arn  = aws_secretsmanager_secret.secret.arn
   }
 
   tags = {
@@ -35,8 +35,8 @@ resource "aws_db_proxy" "proxy" {
   }
 }
 
-resource "aws_db_proxy_default_target_group" "example" {
-  db_proxy_name = aws_db_proxy.example.name
+resource "aws_db_proxy_default_target_group" "proxy_tg" {
+  db_proxy_name = aws_db_proxy.proxy.name
 
   connection_pool_config {
     connection_borrow_timeout    = 120
@@ -48,7 +48,11 @@ resource "aws_db_proxy_default_target_group" "example" {
 }
 
 resource "aws_db_proxy_target" "example" {
-  db_instance_identifier = aws_db_instance.example.identifier
-  db_proxy_name          = aws_db_proxy.example.name
-  target_group_name      = aws_db_proxy_default_target_group.example.name
+  db_instance_identifier = aws_db_instance.default.identifier
+  db_proxy_name          = aws_db_proxy.proxy.name
+  target_group_name      = aws_db_proxy_default_target_group.proxy_tg.name
+}
+
+resource "aws_secretsmanager_secret" "secret" {
+  name = "secret"
 }
