@@ -1,7 +1,0 @@
-module "asg_module" {
-  source  = "./modules/asg"
-  subnets = module.vpc_module.subnet_ids
-  vpc_id  = module.vpc_module.vpc_id
-  security_groups = module.sg_module.security_group_ids
-  key_name = var.key_name
-}

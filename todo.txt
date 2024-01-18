@@ -2,5 +2,5 @@
 [ ] GoldenAMI-Name mit Ansible-Team auf Aktualität prüfen und ggf. (wenn neue AMI erstellt wurde) in "main.tf" des ASG-Moduls in der Launch_Configuration-Resource eintragen
 [ ] Instance-Type ist aktuell als "t2.micro" angelegt --> prüfen, ob ausreichend, oder ggf. anderen Instance-Typen in "main.tf" des ASG-Moduls in der Launch_Configuration-Resource eintragen
 [ ] Kapazitäten der ASG können in der "main.tf" des ASG-Moduls in der ASG-Resource angepasst werden
-[ ] Skript, welches beim Hochfahren der EC2-Instanz(en) durch die ASG, ausgeführt werden soll, muss angepasst werden (Containername fehlt) --> muss in "user_data" in "main.tf" des ASG-Moduls in der Launch_Configuration-Resource eintragen werden
+[ ] Skript, welches beim Hochfahren der EC2-Instanz(en) durch die ASG, ausgeführt werden soll, muss angepasst werden (Containerimage-Name fehlt) --> muss in "user_data" in "main.tf" des ASG-Moduls in der Launch_Configuration-Resource eintragen werden
 [ ] Einstellungen SecurityGroup prüfen, ob aktuell eingetragegen Berechtigungen (SSH, HTTP, HTTPS) ausreichend sind
