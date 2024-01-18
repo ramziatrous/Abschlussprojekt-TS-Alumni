@@ -22,7 +22,7 @@ resource "aws_launch_configuration" "project_lt" {
     create_before_destroy = true
   }
 
-  # hier muss der finale DockerContainer-Name eingetragen werden hinter "docker run"
+  # hier muss der finale DockerContainerImage-Name eingetragen werden hinter "docker run"
   user_data = <<-EOF
                 #!/bin/bash
                 docker run 
