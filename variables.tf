@@ -7,17 +7,8 @@ variable "aws_profile" {
   type = string
 }
 
-# variable "key_name" {
-#   type = string
-# }
-
-# variable "ami_id" {
-#   type = string
-# }
-
-variable "instance_type" {
-  type    = string
-  default = "t2.micro"
+variable "key_name" {
+  type = string
 }
 
 variable "subnets_cidr" {
@@ -28,8 +19,4 @@ variable "subnets_cidr" {
 variable "availability_zones" {
   type    = list(string)
   default = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-}
-
-variable "vpc_id" {
-  type = string
 }

@@ -1,1 +1,0 @@
-# Abschlussprojekt-Terraform-AWS

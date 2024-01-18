@@ -34,9 +34,3 @@ variable "map_public_ip_on_launch" {
   description = "Whether to enable auto-assign public IP on subnet"
   type        = bool
 }
-
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}
