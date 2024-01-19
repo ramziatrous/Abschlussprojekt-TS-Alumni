@@ -13,3 +13,6 @@ output "db_name" {
 output "db_user_name" {
   value = aws_db_instance.default.username
 }
+output "proxy_url" {
+  value = aws_db_proxy.proxy.endpoint
+}
