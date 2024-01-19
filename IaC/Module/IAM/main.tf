@@ -25,7 +25,16 @@ resource "aws_iam_policy" "lambda_policy" {
           "s3:PutObject"
         ],
         "Resource" : "${var.s3_arn}"
-      }
+      },
+      {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:DeleteNetworkInterface",
+                "ec2:DescribeNetworkInterfaces"
+            ],
+            "Resource": "*"
+        }
     ]
   })
 }

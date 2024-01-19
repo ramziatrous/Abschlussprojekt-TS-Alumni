@@ -15,6 +15,11 @@ module "lambda" {
 
   role_arn          = module.iam.role_arn
   api_execution_arn = module.apigateway.api_execution_arn
+  db_host = module.rds.proxy_url
+  db_password = var.db_password
+  security_group_ids = module.sg_module.security_group_ids
+  subnet_ids = module.vpc_module.subnet_ids
+
 }
 module "apigateway" {
   source            = "./Module/Api_gateway"
@@ -62,3 +67,6 @@ module "s3" {
   source = "./Module/S3"
 }
 
+module "ecr" {
+  source = "./Module/ECR"
+}
