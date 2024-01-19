@@ -1,26 +1,41 @@
 resource "aws_db_instance" "default" {
-  identifier = "abschlussprojekt-db"
-  allocated_storage    = 10
-  db_name              = "techstarter"
-  engine               = "mysql"
-  engine_version       = "5.7"
-  instance_class       = "db.t2.micro"
-  username             = "admin"
-  password             = "admin0123"
-  parameter_group_name = "default.mysql5.7"
-  skip_final_snapshot  = true
-  publicly_accessible   = true
-}
+  identifier             = "abschlussprojekt-db"
+  allocated_storage      = 20
+  db_name                = "techstarter"
+  engine                 = "mysql"
+  engine_version         = "5.7"
+  instance_class         = "db.t3.micro"
+  username               = "admin"
+  password               = data.aws_secretsmanager_random_password.random.random_password
+  parameter_group_name   = "default.mysql5.7"
+  skip_final_snapshot    = true
+  publicly_accessible    = true
+  vpc_security_group_ids = [var.security_group_ids]
+  db_subnet_group_name   = aws_db_subnet_group.subnet_group.name
 
+}
+data "aws_secretsmanager_random_password" "random" {
+  password_length     = 28
+  exclude_punctuation = true
+
+}
+resource "aws_db_subnet_group" "subnet_group" {
+  name       = "main"
+  subnet_ids = var.subnet_ids
+
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
 resource "aws_db_proxy" "proxy" {
-  name                   = "rds_proxy"
+  name                   = "rdsproxy"
   debug_logging          = false
   engine_family          = "MYSQL"
   idle_client_timeout    = 1800
   require_tls            = false
-  role_arn               = aws_iam_role.example.arn
-  vpc_security_group_ids = [aws_security_group.example.id]
-  vpc_subnet_ids         = [aws_subnet.example.id]
+  role_arn               = var.rds_role_arn
+  vpc_security_group_ids = [var.security_group_ids]
+  vpc_subnet_ids         = var.subnet_ids
 
   auth {
     auth_scheme = "SECRETS"
@@ -40,10 +55,8 @@ resource "aws_db_proxy_default_target_group" "proxy_tg" {
 
   connection_pool_config {
     connection_borrow_timeout    = 120
-    init_query                   = "SET x=1, y=2"
     max_connections_percent      = 100
     max_idle_connections_percent = 50
-    session_pinning_filters      = ["EXCLUDE_VARIABLE_SETS"]
   }
 }
 
@@ -54,5 +67,16 @@ resource "aws_db_proxy_target" "example" {
 }
 
 resource "aws_secretsmanager_secret" "secret" {
-  name = "secret"
+  name = "main"
+}
+resource "aws_secretsmanager_secret_version" "example" {
+  secret_id     = aws_secretsmanager_secret.secret.id
+  secret_string = jsonencode({
+    engine   = "${aws_db_instance.default.engine}",
+    host     = "${aws_db_instance.default.address}",
+    username = "${aws_db_instance.default.username}",
+    password = "${aws_db_instance.default.password}"
+    dbname   = "${aws_db_instance.default.db_name}",
+    port     = 3306
+  })
 }

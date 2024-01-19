@@ -1,6 +1,7 @@
-variable "dynamodb_arn" {
+
+variable "s3_arn" {
   
 }
-variable "s3_arn" {
+variable "secret_manager_arn" {
   
 }

@@ -5,8 +5,8 @@ locals {
 
 module "iam" {
   source       = "./Module/IAM"
-  dynamodb_arn = ""
-  s3_arn       = ""
+  s3_arn       = module.s3.s3_arn
+  secret_manager_arn = module.rds.secret_manager_arn
 }
 module "lambda" {
   for_each  = local.lambda_config
@@ -52,6 +52,9 @@ module "vpc_module" {
 }
 module "rds" {
     source = "./Module/RDS"
+    security_group_ids = module.sg_module.security_group_ids
+    subnet_ids = module.vpc_module.subnet_ids
+    rds_role_arn = module.iam.rds_role_arn
 }
 
 module "s3" {

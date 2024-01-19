@@ -15,7 +15,7 @@ resource "aws_launch_configuration" "project_lt" {
   name          = "project-lt"
   image_id      = "ami-0d191274f098564a6" # GoldenAMI vom Ansible-Team
   instance_type = "t2.micro"              # FreeTier
-  security_groups = var.security_groups
+  security_groups = [var.security_groups]
   key_name      = var.key_name
 
   lifecycle {
