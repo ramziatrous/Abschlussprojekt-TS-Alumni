@@ -1,3 +1,3 @@
 # Abschlussprojekt-Terraform-AWS
 ### Iac Diagramm
-![](./Asset/IaC%20Diagramm.png)
+![](./Asset/IaC_Diagramm.png)
