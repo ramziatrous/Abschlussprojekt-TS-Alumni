@@ -6,7 +6,7 @@ resource "aws_db_instance" "default" {
   engine_version         = "5.7"
   instance_class         = "db.t3.micro"
   username               = "admin"
-  password               = data.aws_secretsmanager_random_password.random.random_password
+  password               = var.db_password
   parameter_group_name   = "default.mysql5.7"
   skip_final_snapshot    = true
   publicly_accessible    = true
@@ -14,11 +14,7 @@ resource "aws_db_instance" "default" {
   db_subnet_group_name   = aws_db_subnet_group.subnet_group.name
 
 }
-data "aws_secretsmanager_random_password" "random" {
-  password_length     = 28
-  exclude_punctuation = true
 
-}
 resource "aws_db_subnet_group" "subnet_group" {
   name       = "main"
   subnet_ids = var.subnet_ids

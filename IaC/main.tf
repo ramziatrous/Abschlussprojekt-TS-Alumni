@@ -4,8 +4,8 @@ locals {
 }
 
 module "iam" {
-  source       = "./Module/IAM"
-  s3_arn       = module.s3.s3_arn
+  source             = "./Module/IAM"
+  s3_arn             = module.s3.s3_arn
   secret_manager_arn = module.rds.secret_manager_arn
 }
 module "lambda" {
@@ -51,10 +51,11 @@ module "vpc_module" {
   map_public_ip_on_launch = true
 }
 module "rds" {
-    source = "./Module/RDS"
-    security_group_ids = module.sg_module.security_group_ids
-    subnet_ids = module.vpc_module.subnet_ids
-    rds_role_arn = module.iam.rds_role_arn
+  source             = "./Module/RDS"
+  security_group_ids = module.sg_module.security_group_ids
+  subnet_ids         = module.vpc_module.subnet_ids
+  rds_role_arn       = module.iam.rds_role_arn
+  db_password        = var.db_password
 }
 
 module "s3" {

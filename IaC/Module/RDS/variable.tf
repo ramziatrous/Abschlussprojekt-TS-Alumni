@@ -3,3 +3,6 @@ variable "subnet_ids" {
     type = set(string)
 }
 variable "rds_role_arn" {}
+variable "db_password" {
+  
+}
