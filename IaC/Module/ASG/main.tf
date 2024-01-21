@@ -5,6 +5,7 @@ resource "aws_autoscaling_group" "project_asg" {
   desired_capacity     = 1
   launch_configuration = aws_launch_configuration.project_lt.name
   vpc_zone_identifier  = var.subnets
+  target_group_arns = [var.target_group_arn]
 
   lifecycle {
     create_before_destroy = true
@@ -25,6 +26,6 @@ resource "aws_launch_configuration" "project_lt" {
   # hier muss der finale DockerContainerImage-Name eingetragen werden hinter "docker run"
   user_data = <<-EOF
                 #!/bin/bash
-                docker run 
+                docker run --name frontend -d -p 80:80 -i ramziatrous/frontend
                 EOF
 }
