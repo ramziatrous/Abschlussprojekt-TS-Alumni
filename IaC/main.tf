@@ -1,5 +1,6 @@
 locals {
   lambda_config = jsondecode(data.aws_s3_bucket_object.config.body)
+  db_password = jsondecode(data.aws_s3_bucket_object.vars.body).db_password
   lambda_arns   = [for lambda, value in local.lambda_config : module.lambda[lambda].lambda_invoke_arn]
 }
 
@@ -13,12 +14,12 @@ module "lambda" {
   source    = "./Module/Lambda"
   lamda_obj = each.value
 
-  role_arn          = module.iam.role_arn
-  api_execution_arn = module.apigateway.api_execution_arn
-  db_host = module.rds.proxy_url
-  db_password = var.db_password
+  role_arn           = module.iam.role_arn
+  api_execution_arn  = module.apigateway.api_execution_arn
+  db_host            = module.rds.proxy_url
+  db_password        = local.db_password
   security_group_ids = module.sg_module.security_group_ids
-  subnet_ids = module.vpc_module.subnet_ids
+  subnet_ids         = module.vpc_module.subnet_ids
 
 }
 module "apigateway" {
@@ -40,6 +41,7 @@ module "asg_module" {
   vpc_id          = module.vpc_module.vpc_id
   security_groups = module.sg_module.security_group_ids
   key_name        = var.key_name
+  target_group_arn = module.alb_module.target_group_arn
 }
 
 module "sg_module" {
@@ -55,12 +57,16 @@ module "vpc_module" {
   availability_zones      = var.availability_zones
   map_public_ip_on_launch = true
 }
+data "aws_s3_bucket_object" "vars" {
+  bucket = "tfstate-bucket-abschlussproject"
+  key    = "vars.json"
+}
 module "rds" {
   source             = "./Module/RDS"
   security_group_ids = module.sg_module.security_group_ids
   subnet_ids         = module.vpc_module.subnet_ids
   rds_role_arn       = module.iam.rds_role_arn
-  db_password        = var.db_password
+  db_password        = local.db_password
 }
 
 module "s3" {
@@ -70,3 +76,9 @@ module "s3" {
 module "ecr" {
   source = "./Module/ECR"
 }
+# data "aws_instance" "alb_scales" {
+# filter {
+#     name   = "tag:Autoscaling"
+#     values = ["instance-name-tag"]
+#   }
+# }
