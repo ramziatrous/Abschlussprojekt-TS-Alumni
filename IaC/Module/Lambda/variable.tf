@@ -11,9 +11,7 @@ variable "lamda_obj" {
   }
 }
 
-variable "role_arn" {
 
-}
 variable "api_execution_arn" {
 
 }
@@ -28,5 +26,9 @@ variable "security_group_ids" {
   
 }
 variable "subnet_ids" {
+  
+}
+
+variable "s3_arn" {
   
 }

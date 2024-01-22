@@ -2,7 +2,7 @@ resource "aws_lambda_function" "lambda" {
   function_name = var.lamda_obj.function_name
   handler       = "index.handler"
   runtime       = "nodejs18.x"
-  role          = var.role_arn
+  role          = aws_iam_role.lambda_role.arn
 
   s3_bucket         = "tfstate-bucket-abschlussproject"
   s3_key            = "functions_code/${var.lamda_obj.function_name}.zip"
@@ -29,4 +29,67 @@ resource "aws_lambda_permission" "allow_api_gateway_to_invoke_lambda" {
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${var.api_execution_arn}/*/*/${var.lamda_obj.route}"
+}
+
+
+resource "aws_iam_role" "lambda_role" {
+  name = "${var.lamda_obj.function_name}_role"
+  assume_role_policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Action : "sts:AssumeRole",
+        Effect : "Allow",
+        Principal : {
+          Service : "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "lambda_policy" {
+  name = "${var.lamda_obj.function_name}_policy"
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        "Effect" : "Allow",
+        "Action" : ["s3:GetObject",
+          "s3:PutObject"
+        ],
+        "Resource" : "${var.s3_arn}"
+      },
+      {
+            "Effect": "Allow",
+            "Action": "logs:CreateLogGroup",
+            "Resource": "arn:aws:logs:eu-central-1:048479317518:*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:eu-central-1:048479317518:log-group:/aws/lambda/${var.lamda_obj.function_name}:*"
+            ]
+        },
+      {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:DeleteNetworkInterface",
+                "ec2:DescribeNetworkInterfaces"
+            ],
+            "Resource": "*"
+        }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
+
+  policy_arn = aws_iam_policy.lambda_policy.arn
+  role       = aws_iam_role.lambda_role.name
 }
