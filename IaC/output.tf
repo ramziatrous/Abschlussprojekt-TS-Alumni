@@ -20,7 +20,3 @@ output "ecr_url" {
 output "proxy_url" {
   value = module.rds.proxy_url
 }
-# output "instance_ips" {
-# description = "The current FrontEnd IP's are: "
-# value = data.aws_instance.alb_scales.public_ip[*]
-# }

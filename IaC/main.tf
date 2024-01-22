@@ -76,9 +76,3 @@ module "s3" {
 module "ecr" {
   source = "./Module/ECR"
 }
-# data "aws_instance" "alb_scales" {
-# filter {
-#     name   = "tag:Autoscaling"
-#     values = ["instance-name-tag"]
-#   }
-# }
