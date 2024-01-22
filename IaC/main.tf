@@ -1,25 +1,25 @@
 locals {
   lambda_config = jsondecode(data.aws_s3_bucket_object.config.body)
-  db_password = jsondecode(data.aws_s3_bucket_object.vars.body).db_password
+  db_password   = jsondecode(data.aws_s3_bucket_object.vars.body).db_password
   lambda_arns   = [for lambda, value in local.lambda_config : module.lambda[lambda].lambda_invoke_arn]
 }
 
 module "iam" {
   source             = "./Module/IAM"
-  s3_arn             = module.s3.s3_arn
   secret_manager_arn = module.rds.secret_manager_arn
+  lamda_obj          = local.lambda_config
 }
 module "lambda" {
-  for_each  = local.lambda_config
-  source    = "./Module/Lambda"
-  lamda_obj = each.value
-
-  role_arn           = module.iam.role_arn
+  for_each           = local.lambda_config
+  source             = "./Module/Lambda"
+  lamda_obj          = each.value
   api_execution_arn  = module.apigateway.api_execution_arn
   db_host            = module.rds.proxy_url
   db_password        = local.db_password
   security_group_ids = module.sg_module.security_group_ids
   subnet_ids         = module.vpc_module.subnet_ids
+  s3_arn             = module.s3.s3_arn
+
 
 }
 module "apigateway" {
@@ -36,11 +36,11 @@ module "alb_module" {
 }
 
 module "asg_module" {
-  source          = "./Module/ASG"
-  subnets         = module.vpc_module.subnet_ids
-  vpc_id          = module.vpc_module.vpc_id
-  security_groups = module.sg_module.security_group_ids
-  key_name        = var.key_name
+  source           = "./Module/ASG"
+  subnets          = module.vpc_module.subnet_ids
+  vpc_id           = module.vpc_module.vpc_id
+  security_groups  = module.sg_module.security_group_ids
+  key_name         = var.key_name
   target_group_arn = module.alb_module.target_group_arn
 }
 
