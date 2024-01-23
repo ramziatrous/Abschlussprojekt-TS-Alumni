@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "lambda" {
   function_name = var.lamda_obj.function_name
   handler       = "index.handler"
-  runtime       = "nodejs18.x"
+  runtime       = "nodejs20.x"
   role          = aws_iam_role.lambda_role.arn
 
   s3_bucket         = "tfstate-bucket-abschlussproject"
@@ -14,7 +14,7 @@ resource "aws_lambda_function" "lambda" {
       TSNET_DB_HOST     = var.db_host,
       TSNET_DB_PASSWORD = var.db_password,
       TSNET_DB_PORT     = "3306",
-      SNET_DB_USER      = "admin"
+      TSNET_DB_USER      = "admin"
     }
   }
   vpc_config {
