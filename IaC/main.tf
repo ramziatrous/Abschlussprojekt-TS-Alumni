@@ -2,6 +2,7 @@ locals {
   lambda_config = jsondecode(data.aws_s3_bucket_object.config.body)
   db_password   = jsondecode(data.aws_s3_bucket_object.vars.body).db_password
   lambda_arns   = [for lambda, value in local.lambda_config : module.lambda[lambda].lambda_invoke_arn]
+  docker_pass   = jsondecode(data.aws_s3_bucket_object.vars.body).docker_pass
 }
 
 module "iam" {
@@ -42,6 +43,7 @@ module "asg_module" {
   security_groups  = module.sg_module.security_group_ids
   key_name         = var.key_name
   target_group_arn = module.alb_module.target_group_arn
+  docker_pass      = local.docker_pass
 }
 
 module "sg_module" {
