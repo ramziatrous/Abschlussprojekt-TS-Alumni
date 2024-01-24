@@ -20,7 +20,3 @@ output "ecr_url" {
 output "proxy_url" {
   value = module.rds.proxy_url
 }
-
-output "instance_id" {
-  value = module.asg.instance_id
-}

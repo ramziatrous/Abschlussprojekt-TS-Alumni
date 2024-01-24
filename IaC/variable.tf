@@ -12,6 +12,6 @@ variable "availability_zones" {
   type    = list(string)
   default = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
 }
-variable "docker_pass" {
+# variable "docker_pass" {
   
-}
+# }
