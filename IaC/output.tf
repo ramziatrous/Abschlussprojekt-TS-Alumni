@@ -5,7 +5,7 @@ output "db_endpoint" {
   value = module.rds.rds_endpunkt
 }
 output "db_password" {
-  value = module.rds.db_password
+  value     = module.rds.db_password
   sensitive = true
 }
 output "db_name" {
@@ -19,4 +19,8 @@ output "ecr_url" {
 }
 output "proxy_url" {
   value = module.rds.proxy_url
+}
+
+output "instance_id" {
+  value = module.asg.instance_id
 }
