@@ -26,7 +26,7 @@ resource "aws_launch_configuration" "project_lt" {
   # hier muss der finale DockerContainerImage-Name eingetragen werden hinter "docker run"
   user_data = <<-EOF
                 #!/bin/bash
-                docker login --username aws2302 --password ${var.docker_pass}
+                docker login --username aws2302 --password "${var.docker_pass}"
                 docker run --name frontend -d -p 80:80 -i aws2302/aws2302:latest
                 EOF
 }
