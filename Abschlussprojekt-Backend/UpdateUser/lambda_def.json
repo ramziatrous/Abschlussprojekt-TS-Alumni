@@ -1,0 +1,12 @@
+{
+    "function_name": "updateUser",
+    "http_methode": "PUT",
+    "route": "updateUser",
+    "meta": { 
+        "package_type": "zip",
+        "tags": {
+            "environment": "dev",
+            "deploy": "terraform"
+            } 
+        }
+}

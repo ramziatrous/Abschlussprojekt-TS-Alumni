@@ -1,0 +1,12 @@
+{
+    "function_name": "deletePostByID",
+    "http_methode": "DELETE",
+    "route": "deletePost/{post_id}",
+    "meta": { 
+        "package_type": "zip",
+        "tags": {
+            "environment": "dev",
+            "deploy": "terraform"
+            } 
+        }
+}

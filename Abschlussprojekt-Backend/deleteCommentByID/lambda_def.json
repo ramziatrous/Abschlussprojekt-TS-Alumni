@@ -1,0 +1,12 @@
+{
+    "function_name": "deleteCommentByID",
+    "http_methode": "DELETE",
+    "route": "deleteComment/{id}",
+    "meta": { 
+        "package_type": "zip",
+        "tags": {
+            "environment": "dev",
+            "deploy": "terraform"
+            } 
+        }
+}

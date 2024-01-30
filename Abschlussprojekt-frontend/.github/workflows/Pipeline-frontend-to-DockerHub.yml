@@ -1,0 +1,87 @@
+name: Build and Push Docker Image to Dockerhub
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        run: docker buildx create --use
+
+      - name: Build Docker Image
+        id: build-image
+        run: |
+          ls -la
+          docker build -t aws2302/aws2302 -f docker/Dockerfile $GITHUB_WORKSPACE
+          echo "::set-output name=image-name::aws2302/aws2302"
+
+      - name: Login to Docker Hub
+        run: |
+          echo "[$(date -u)] Logging in to Docker Hub..."
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          if [ $? -eq 0 ]; then
+            echo "[$(date -u)] Logged in to Docker Hub successfully"
+          else
+            echo "[$(date -u)] Error: Failed to log in to Docker Hub"
+            exit 1
+          fi
+
+      - name: Tag Docker image
+        run: |
+          echo "[$(date -u)] Tagging Docker image..."
+          docker tag aws2302/aws2302:latest "${{ secrets.DOCKERHUB_USERNAME }}/aws2302:latest"
+          if [ $? -eq 0 ]; then
+            echo "[$(date -u)] Tagged Docker image successfully"
+          else
+            echo "[$(date -u)] Error: Failed to tag Docker image"
+            exit 1
+          fi
+
+      - name: Push Docker image
+        run: |
+          echo "[$(date -u)] Pushing Docker image..."
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}/aws2302:latest"
+          if [ $? -eq 0 ]; then
+            echo "[$(date -u)] Pushed Docker image successfully"
+          else
+            echo "[$(date -u)] Error: Failed to push Docker image"
+            exit 1
+          fi
+
+      - name: Task complete
+        run: echo "[$(date -u)] Task complete"
+
+  aws-steps:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      - name: Install AWS CLI
+        id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+
+      - name: Configure AWS Credentials
+        run: |
+          mkdir -p ~/.aws/
+          echo "$super_secret" > ~/.aws/credentials
+        env:
+          super_secret: ${{ secrets.AWS_CONFIG }}
+
+      - name: Show AWS Credentials
+        run: cat ~/.aws/credentials
+
+      - name: List AWS CLI Profiles
+        run: aws configure list-profiles
+
+      - name: List S3 Buckets
+        run: aws s3 ls --region eu-central-1 --profile 048479317518_Student
+
+        ##

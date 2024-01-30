@@ -1,0 +1,12 @@
+{
+    "function_name": "getCommentsByPostID",
+    "http_methode": "GET",
+    "route": "getComments/{post_id}",
+    "meta": { 
+        "package_type": "zip",
+        "tags": {
+            "environment": "dev",
+            "deploy": "terraform"
+            } 
+        }
+}

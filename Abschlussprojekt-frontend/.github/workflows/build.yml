@@ -1,0 +1,57 @@
+name: Upload a Docker image to AWS ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      image-name: ${{ steps.tag-image.outputs.image-name }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        id: build-image
+        run: |
+          ls -la
+          docker build -t frontend-image -f docker/Dockerfile $GITHUB_WORKSPACE
+          echo "::set-output name=image-name::frontend-image"
+
+      - name: Install AWS CLI
+        id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+
+      - name: Configure AWS Credentials
+        run: |
+          mkdir -p ~/.aws/
+          echo "$super_secret" > ~/.aws/credentials
+        env:
+          super_secret: ${{ secrets.AWS_CONFIG }}
+
+      - name: Show AWS Credentials
+        run: cat ~/.aws/credentials
+
+      - name: List AWS CLI Profiles
+        run: aws configure list-profiles
+
+      - name: List S3 Buckets
+        run: aws s3 ls --region eu-central-1 --profile 048479317518_Student
+
+      - name: Amazon ECR Login
+        run: aws ecr get-login-password --region eu-central-1 --profile 048479317518_Student | docker login --username AWS --password-stdin 048479317518.dkr.ecr.eu-central-1.amazonaws.com
+
+      - name: Tag Docker Image
+        id: tag-image
+        run: docker tag frontend-image:latest 048479317518.dkr.ecr.eu-central-1.amazonaws.com/nick:latest
+
+      - name: Push Docker Image to ECR
+        run: docker push 048479317518.dkr.ecr.eu-central-1.amazonaws.com/nick:latest
+        timeout-minutes: 10
+
+        ##

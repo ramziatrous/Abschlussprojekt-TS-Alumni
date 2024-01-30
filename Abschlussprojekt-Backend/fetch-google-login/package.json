@@ -1,0 +1,13 @@
+{
+  "name": "lambda-entwicklung-beispiel",
+  "version": "1.0.0",
+  "description": "Temmplate für lokale Lambda entwicklung",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karim Aouini",
+  "license": "ISC",
+  "dependencies": {
+  }
+}

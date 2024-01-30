@@ -1,0 +1,12 @@
+{
+    "function_name": "addComment",
+    "http_methode": "POST",
+    "route": "addComment",
+    "meta": { 
+        "package_type": "zip",
+        "tags": {
+            "environment": "dev",
+            "deploy": "terraform"
+            } 
+        }
+}

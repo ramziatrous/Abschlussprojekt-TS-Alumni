@@ -1,0 +1,270 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #010b1f;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5em;
+  height: 3%;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.logo {
+  height: 60px; 
+  width: auto;
+  margin-right: 10px; 
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #fff; 
+  border-radius: 20px; 
+  padding: 5px 10px;
+  margin: 0 20px; 
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.search-bar button {
+  background-color: #4285f4; 
+  color: #fff; 
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  margin-left: 10px; 
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.user-info-container {
+  display: flex;
+  align-items: center;
+}
+
+.user-photo img {
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%; 
+  margin-right: 10px;
+}
+
+.user-details p {
+  margin: 0;
+  color: white;
+}
+
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.dropdown-container:hover .dropdown-content {
+  display: block;
+}
+
+.menu-item {
+  padding: 12px;
+  text-decoration: none;
+  color: #6f5bdf;
+  display: block;
+}
+
+.menu-item:hover {
+  background-color: #f2f2f2;
+}
+
+.app {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; 
+}
+
+.chat-container {
+  margin-top: 60px; 
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: darkblue;
+}
+
+.Posts-container {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.message .user {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.message .user img {
+  margin-right: 10px;
+  border-radius: 50%; 
+}
+
+.message .user p {
+  margin: 0;
+}
+
+
+.comment .commentuser {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.comment .commentuser img {
+  margin-right: 10px;
+  border-radius: 50%; 
+}
+.space-between {
+  margin-right: 10px; 
+  display: inline-block;
+}
+.comment .commentuser p {
+  margin: 0;
+  white-space: nowrap;  
+}
+.comment .commentuser a {
+  margin: 0;
+  white-space: nowrap;  
+}
+.comment .comment-text p {
+  margin: 0;
+  white-space: nowrap;  
+}
+
+.comment .commentuser strong {
+  margin-right: 10px;
+}
+
+.message .post-media {
+  max-width: 100%;
+  height: auto;
+}
+
+.input-container {
+  position: fixed;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  background: #bdbdbd;
+  opacity: 90%;
+  padding: 10px;
+  border-radius: 8px;
+  border-color: #333;
+  display: flex;
+  align-items: center;
+}
+
+textarea {
+  flex: 1;
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #0805d0;
+  border-radius: 4px;
+  resize: none;
+}
+
+.send-button,
+.upload-button {
+  cursor: pointer;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.comments-container {
+  margin-right: 90%;
+}
+
+.comment-button {
+  margin-left: 80%;
+  cursor: pointer;
+}
+
+.comments-input {
+  display: flex;
+  align-items: center;
+}
+
+.comments-input input {
+  margin-left: 350%;
+  height: 35px;
+  border-radius: 5px;
+}
+
+.comments-input button {
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+.nicht {
+  display: none;
+}
+.sidebar {
+  position: fixed;
+  top: 8cap;
+  left: 0;
+  bottom: 0;
+  width: auto;
+  
+  overflow-y: auto;
+  z-index: 1000;
+}
+.logos{
+  width: 60px;
+  border-radius: 10px;
+  margin-top: 2cap;
+}
+@media screen and (max-width: 600px) {
+  .app .input-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .app .sidebar {
+    display: none;
+  }
+  .comment-button {
+    margin-left: 70%;
+  }
+  .comments-container {
+    margin-left: 10%;
+  }
+  .search-bar {
+    display: none;
+  }
+}
