@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background-color: #010b1f;
+  background-color: #242424;
   z-index: 1000;
   display: flex;
   justify-content: space-between;
@@ -262,7 +262,7 @@
   width: auto;
   overflow-y: auto;
   z-index: 1000;
-  color: #010b1f;
+color: #010b1f;
 }
 .appprofile .sidebar:hover{
   color: #010b1f;
