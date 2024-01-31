@@ -1,4 +1,5 @@
-.header {
+/* Header Styles */
+.appnewsfeed .header {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,28 +13,32 @@
   height: 3%;
 }
 
-.logo-container {
+/* Logo Container Styles */
+.appnewsfeed .logo-container {
   display: flex;
   align-items: center;
   margin-top: 2%;
 }
 
-.logo {
-  height: 60px; 
+/* Logo Styles */
+.appnewsfeed .logo {
+  height: 60px;
   width: auto;
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 
-.search-bar {
+/* Search Bar Styles */
+.appnewsfeed .search-bar {
   display: flex;
   align-items: center;
-  background-color: #fff; 
-  border-radius: 20px; 
+  background-color: #fff;
+  border-radius: 20px;
   padding: 5px 10px;
-  margin: 0 20px; 
+  margin: 0 20px;
 }
 
-.search-bar input {
+/* Search Input Styles */
+.appnewsfeed .search-bar input {
   flex: 1;
   border: none;
   outline: none;
@@ -41,40 +46,49 @@
   font-size: 14px;
 }
 
-.search-bar button {
-  background-color: #4285f4; 
-  color: #fff; 
+/* Search Button Styles */
+.appnewsfeed .search-bar button {
+  background-color: #4285f4;
+  color: #fff;
   border: none;
   border-radius: 5px;
   padding: 8px 15px;
-  margin-left: 10px; 
+  margin-left: 10px;
   cursor: pointer;
   font-size: 14px;
 }
 
-.user-info-container {
+/* User Info Container Styles */
+.appnewsfeed .user-info-container {
   display: flex;
   align-items: center;
 }
 
-.user-photo img {
-  width: 40px; 
-  height: 40px; 
-  border-radius: 50%; 
+/* User Photo Styles */
+.appnewsfeed .user-photo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   margin-right: 10px;
 }
-
-.user-details p {
+.appnewsfeed .messagess {
+  color: #cf0e41;
+  background-color: #d1760e;
+}
+/* User Details Styles */
+.appnewsfeed .user-details p {
   margin: 0;
   color: white;
 }
 
-.dropdown-container {
+/* Dropdown Container Styles */
+.appnewsfeed .dropdown-container {
   position: relative;
   display: inline-block;
 }
 
-.dropdown-content {
+/* Dropdown Content Styles */
+.appnewsfeed .dropdown-content {
   display: none;
   position: absolute;
   background-color: #ffffff;
@@ -83,29 +97,34 @@
   border-radius: 4px;
 }
 
-.dropdown-container:hover .dropdown-content {
+/* Hover Effect for Dropdown Container */
+.appnewsfeed .dropdown-container:hover .dropdown-content {
   display: block;
 }
 
-.menu-item {
+/* Menu Item Styles */
+.appnewsfeed .menu-item {
   padding: 12px;
   text-decoration: none;
   color: #6f5bdf;
   display: block;
 }
 
-.menu-item:hover {
+/* Hover Effect for Menu Item */
+.appnewsfeed .menu-item:hover {
   background-color: #f2f2f2;
 }
 
-.app {
+/* App Styles */
+.appnewsfeed .app {
   display: flex;
   flex-direction: row;
-  align-items: flex-start; 
+  align-items: flex-start;
 }
 
-.chat-container {
-  margin-top: 60px; 
+/* Chat Container Styles */
+.appnewsfeed .chat-container {
+  margin-top: 60px;
   margin-bottom: 40px;
   display: flex;
   flex-direction: column;
@@ -113,7 +132,8 @@
   color: darkblue;
 }
 
-.Posts-container {
+/* Posts Container Styles */
+.appnewsfeed .Posts-container {
   width: 100%;
   max-width: 800px;
   padding: 20px;
@@ -121,59 +141,74 @@
   margin-bottom: 20px;
 }
 
-.message .user {
+/* User Message Styles */
+.appnewsfeed .message .user {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.message .user img {
+/* User Message Image Styles */
+.appnewsfeed .message .user img {
   margin-right: 10px;
-  border-radius: 50%; 
+  border-radius: 50%;
 }
 
-.message .user p {
+/* User Message Paragraph Styles */
+.appnewsfeed .message .user p {
   margin: 0;
 }
 
-
-.comment .commentuser {
+/* Comment Styles */
+.appnewsfeed .comment .commentuser {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.comment .commentuser img {
+/* Comment User Image Styles */
+.appnewsfeed .comment .commentuser img {
   margin-right: 10px;
-  border-radius: 50%; 
+  border-radius: 50%;
 }
-.space-between {
-  margin-right: 10px; 
+
+/* Space Between Styles */
+.appnewsfeed .space-between {
+  margin-right: 10px;
   display: inline-block;
 }
-.comment .commentuser p {
+
+/* Comment User Paragraph Styles */
+.appnewsfeed .comment .commentuser p {
   margin: 0;
-  white-space: nowrap;  
-}
-.comment .commentuser a {
-  margin: 0;
-  white-space: nowrap;  
-}
-.comment .comment-text p {
-  margin: 0;
-  white-space: nowrap;  
+  white-space: nowrap;
 }
 
-.comment .commentuser strong {
+/* Comment User Anchor Styles */
+.appnewsfeed .comment .commentuser a {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Comment Text Paragraph Styles */
+.appnewsfeed .comment .comment-text p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Comment User Strong Styles */
+.appnewsfeed .comment .commentuser strong {
   margin-right: 10px;
 }
 
-.message .post-media {
+/* Post Media Styles */
+.appnewsfeed .message .post-media {
   max-width: 100%;
   height: auto;
 }
 
-.input-container {
+/* Input Container Styles */
+.appnewsfeed .input-container {
   position: fixed;
   bottom: 0;
   left: 20%;
@@ -187,7 +222,8 @@
   align-items: center;
 }
 
-textarea {
+/* Textarea Styles */
+.appnewsfeed textarea {
   flex: 1;
   padding: 10px;
   margin-right: 10px;
@@ -196,8 +232,9 @@ textarea {
   resize: none;
 }
 
-.send-button,
-.upload-button {
+/* Send and Upload Button Styles */
+.appnewsfeed .send-button,
+.appnewsfeed .upload-button {
   cursor: pointer;
   background-color: #646cff;
   color: white;
@@ -206,49 +243,68 @@ textarea {
   border-radius: 4px;
 }
 
-.comments-container {
+/* Comments Container Styles */
+.appnewsfeed .comments-container {
   margin-right: 90%;
 }
 
-.comment-button {
+/* Comment Button Styles */
+.appnewsfeed .comment-button {
   margin-left: 80%;
   cursor: pointer;
 }
 
-.comments-input {
+/* Comments Input Styles */
+.appnewsfeed .comments-input {
   display: flex;
   align-items: center;
 }
 
-.comments-input input {
+/* Comments Input Textarea Styles */
+.appnewsfeed .comments-input input {
   margin-left: 350%;
   height: 35px;
   border-radius: 5px;
 }
 
-.comments-input button {
+/* Comments Input Button Styles */
+.appnewsfeed .comments-input button {
   height: 40px;
   border: none;
   border-radius: 5px;
   margin-bottom: 5px;
 }
-
-
+.appnewsfeed .search-liste{
+  position: fixed;
+  z-index: 1000;
+  background-color: rgb(243, 241, 241);
+  margin-top: 28px;
+  width: 290px;
+  margin-left: 250px;
+  border-radius: 20px;
+}
+.appnewsfeed .search-liste ul {
+  list-style: none; 
+}
+.appnewsfeed .search-liste li {
+  color: #0805d0;
+}
+/* Media Query for Small Screens */
 @media screen and (max-width: 600px) {
-  .app .input-container {
+  .appnewsfeed .input-container {
     flex-direction: column;
     align-items: stretch;
   }
-  .app .sidebar {
+  .appnewsfeed .sidebar {
     display: none;
   }
-  .comment-button {
+  .appnewsfeed .comment-button {
     margin-left: 70%;
   }
-  .comments-container {
+  .appnewsfeed .comments-container {
     margin-left: 10%;
   }
-  .search-bar {
+  .appnewsfeed .search-bar {
     display: none;
   }
 }

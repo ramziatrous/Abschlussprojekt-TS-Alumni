@@ -1,4 +1,4 @@
-.header {
+.appprofile .header {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,20 +11,34 @@
   padding: 1.5em;
   height: 3%;
 }
-
-.logo-container {
+.appprofile .search-liste{
+  position: fixed;
+  z-index: 1000;
+  background-color: rgb(243, 241, 241);
+  margin-top: 28px;
+  width: 290px;
+  margin-left: 250px;
+  border-radius: 20px;
+}
+.appprofile .search-liste ul {
+  list-style: none; 
+}
+.appprofile .search-liste li {
+  color: #0805d0;
+}
+.appprofile .logo-container {
   display: flex;
   align-items: center;
   margin-top: 2%;
 }
 
-.logo {
+.appprofile .logo {
   height: 60px; 
   width: auto;
   margin-right: 10px; 
 }
 
-.search-bar {
+.appprofile .search-bar {
   display: flex;
   align-items: center;
   background-color: #fff; 
@@ -33,7 +47,7 @@
   margin: 0 20px; 
 }
 
-.search-bar input {
+.appprofile .search-bar input {
   flex: 1;
   border: none;
   outline: none;
@@ -41,7 +55,7 @@
   font-size: 14px;
 }
 
-.search-bar button {
+.appprofile .search-bar button {
   background-color: #4285f4; 
   color: #fff; 
   border: none;
@@ -52,29 +66,29 @@
   font-size: 14px;
 }
 
-.user-info-container {
+.appprofile .user-info-container {
   display: flex;
   align-items: center;
 }
 
-.user-photo img {
+.appprofile .user-photo img {
   width: 40px; 
   height: 40px; 
   border-radius: 50%; 
   margin-right: 10px;
 }
 
-.user-details p {
+.appprofile .user-details p {
   margin: 0;
   color: white;
 }
 
-.dropdown-container {
+.appprofile .dropdown-container {
   position: relative;
   display: inline-block;
 }
 
-.dropdown-content {
+.appprofile .dropdown-content {
   display: none;
   position: absolute;
   background-color: #ffffff;
@@ -83,28 +97,28 @@
   border-radius: 4px;
 }
 
-.dropdown-container:hover .dropdown-content {
+.appprofile .dropdown-container:hover .dropdown-content {
   display: block;
 }
 
-.menu-item {
+.appprofile .menu-item {
   padding: 12px;
   text-decoration: none;
   color: #6f5bdf;
   display: block;
 }
 
-.menu-item:hover {
+.appprofile .menu-item:hover {
   background-color: #f2f2f2;
 }
 
-.app {
+.appprofile .app {
   display: flex;
   flex-direction: row;
   align-items: flex-start; 
 }
 
-.chat-container {
+.appprofile .chat-container {
   margin-top: 60px; 
   margin-bottom: 40px;
   display: flex;
@@ -113,7 +127,7 @@
   color: darkblue;
 }
 
-.Posts-container {
+.appprofile .Posts-container {
   width: 100%;
   max-width: 800px;
   padding: 20px;
@@ -121,59 +135,62 @@
   margin-bottom: 20px;
 }
 
-.message .user {
+.appprofile .message .user {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.message .user img {
+.appprofile .message .user img {
   margin-right: 10px;
   border-radius: 50%; 
 }
 
-.message .user p {
+.appprofile .message .user p {
   margin: 0;
 }
 
-
-.comment .commentuser {
+.appprofile .comment .commentuser {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.comment .commentuser img {
+.appprofile .comment .commentuser img {
   margin-right: 10px;
   border-radius: 50%; 
 }
-.space-between {
+
+.appprofile .space-between {
   margin-right: 10px; 
   display: inline-block;
 }
-.comment .commentuser p {
-  margin: 0;
-  white-space: nowrap;  
-}
-.comment .commentuser a {
-  margin: 0;
-  white-space: nowrap;  
-}
-.comment .comment-text p {
+
+.appprofile .comment .commentuser p {
   margin: 0;
   white-space: nowrap;  
 }
 
-.comment .commentuser strong {
+.appprofile .comment .commentuser a {
+  margin: 0;
+  white-space: nowrap;  
+}
+
+.appprofile .comment .comment-text p {
+  margin: 0;
+  white-space: nowrap;  
+}
+
+.appprofile .comment .commentuser strong {
   margin-right: 10px;
 }
 
-.message .post-media {
+.appprofile .message .post-media {
   max-width: 100%;
   height: auto;
 }
 
-.input-container {
+.appprofile .input-container {
   position: fixed;
   bottom: 0;
   left: 20%;
@@ -187,7 +204,7 @@
   align-items: center;
 }
 
-textarea {
+.appprofile textarea {
   flex: 1;
   padding: 10px;
   margin-right: 10px;
@@ -196,8 +213,8 @@ textarea {
   resize: none;
 }
 
-.send-button,
-.upload-button {
+.appprofile .send-button,
+.appprofile .upload-button {
   cursor: pointer;
   background-color: #646cff;
   color: white;
@@ -206,65 +223,75 @@ textarea {
   border-radius: 4px;
 }
 
-.comments-container {
+.appprofile .comments-container {
   margin-right: 90%;
 }
 
-.comment-button {
+.appprofile .comment-button {
   margin-left: 80%;
   cursor: pointer;
 }
 
-.comments-input {
+.appprofile .comments-input {
   display: flex;
   align-items: center;
 }
 
-.comments-input input {
+.appprofile .comments-input input {
   margin-left: 350%;
   height: 35px;
   border-radius: 5px;
 }
 
-.comments-input button {
+.appprofile .comments-input button {
   height: 40px;
   border: none;
   border-radius: 5px;
   margin-bottom: 5px;
 }
-.nicht {
+
+.appprofile .nicht {
   display: none;
 }
-.sidebar {
+
+.appprofile .sidebar {
   position: fixed;
   top: 8cap;
   left: 0;
   bottom: 0;
   width: auto;
-  
   overflow-y: auto;
   z-index: 1000;
+  color: #010b1f;
 }
-.logos{
+.appprofile .sidebar:hover{
+  color: #010b1f;
+}
+.appprofile .sidebar input{
+  width: 100px;
+}
+
+.appprofile .logos{
   width: 60px;
   border-radius: 10px;
   margin-top: 2cap;
 }
+
 @media screen and (max-width: 600px) {
-  .app .input-container {
+  .appprofile .input-container {
     flex-direction: column;
     align-items: stretch;
   }
-  .app .sidebar {
+  .appprofile .sidebar {
     display: none;
   }
-  .comment-button {
+  .appprofile .comment-button {
     margin-left: 70%;
   }
-  .comments-container {
+  .appprofile .comments-container {
     margin-left: 10%;
   }
-  .search-bar {
+  .appprofile .search-bar {
     display: none;
   }
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../newsfeed.css';
 import { useNavigate } from 'react-router-dom';
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import logo from '../assets/logo.png';
 
 
 const NewsFeed = () => {
@@ -25,7 +25,40 @@ const NewsFeed = () => {
   const [showComments, setShowComments] = useState();
   const [newcomment, setNewcomment] = useState('');
   const [postId, setPostId] = useState(null);
+  const [userDataFetched, setUserDataFetched] = useState(false);
+  const [realNames, setRealNames] = useState([]);
+  const [user_ids, setUser_ids] = useState([])
+  const [name, setName] = useState('');
+  const [searchliste, setSearchListe] = useState('nicht');
+  const [Commentscount,setCommentscount] = useState('')
+  const fetchUserData = async () => {
 
+    try {
+      const response = await fetch('https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getAllPosts', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      // console.log(data);
+
+
+      if (data.status === 'ok') {
+        setPosts(data.posts);
+
+      } else {
+        console.error('Error fetching user data', data);
+      }
+    } catch (error) {
+      console.error('Network error', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // console.log(Posts)
   useEffect(() => {
 
 
@@ -36,49 +69,13 @@ const NewsFeed = () => {
         if (!user_id) {
           navigate("/");
         } else {
-          const fetchUserData = async () => {
+          if (!userDataFetched) {
 
-            try {
-              const response = await fetch('https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getAllPosts', {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
+            await fetchUserData();
+            setUserDataFetched(true);
+          }
 
-              const data = await response.json();
 
-              // console.log(data);
-
-              if (data.status === 'ok') {
-                setPosts(data.posts);
-              } else {
-                console.error('Error fetching user data', data);
-              }
-            } catch (error) {
-              console.error('Network error', error);
-            } finally {
-              setIsLoading(false);
-            }
-          };
-
-          const getUser = async () => {
-            try {
-              const user_id = localStorage.getItem("UserID");
-              const url = 'https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getUser/' + user_id
-              const response = await fetch(url,
-                {
-                  method: "GET",
-                  headers: { "Content-Type": "application/json" },
-                });
-              const userData = await response.json()
-              setUser(userData)
-              // console.log(userData)
-
-            } catch (error) {
-              console.error("Fehler beim Bearbeiten des Profils", error);
-            }
-          };
 
           const fetchUserUserData = async (postUserIds) => {
             try {
@@ -123,13 +120,21 @@ const NewsFeed = () => {
             }
           };
 
+          const changeClassSearchListe = (name) => {
+            if (name == '') {
+              setSearchListe("nicht");
+            } else {
+              setSearchListe("search-liste");
+            }
+
+
+          };
 
 
 
-
-
-          fetchUserData();
           getUser();
+          changeClassSearchListe(name)
+
           fetchUserUserData(Posts.map((post) => post.user_id));
           fetchcommentUserData(Comments.map((comment) => comment.UserID));
 
@@ -140,10 +145,26 @@ const NewsFeed = () => {
       }
     };
     isconnected();
-  }, [Posts]);
+  }, [Posts, setUserDataFetched, Comments, name, realNames]);
 
 
+  const getUser = async () => {
+    try {
+      const user_id = localStorage.getItem("UserID");
+      const url = 'https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getUser/' + user_id
+      const response = await fetch(url,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+      const userData = await response.json()
+      setUser(userData)
+      // console.log(userData)
 
+    } catch (error) {
+      console.error("Fehler beim Bearbeiten des Profils", error);
+    }
+  };
 
   const handleSendMessage = async () => {
     try {
@@ -161,7 +182,7 @@ const NewsFeed = () => {
 
       const data = await response.json();
 
-      console.log('Data:', data);
+      // console.log('Data:', data);
       setNewMessage('')
     } catch (error) {
       console.error('Network error', error);
@@ -184,8 +205,8 @@ const NewsFeed = () => {
 
       const data = await response.json();
 
-      console.log('Data:', data);
-
+      // console.log('Data:', data);
+      fetchUserData();
       setNewcomment('');
       handleToggle(null, postId);
 
@@ -212,10 +233,11 @@ const NewsFeed = () => {
         headers: { 'Content-Type': 'application/json' },
       });
       const CommentsData = await response.json();
-      
+
 
       if (CommentsData.status === 'ok') {
         setComments(CommentsData.comments);
+
       } else {
         console.error('Error fetching user data', CommentsData);
       }
@@ -238,18 +260,60 @@ const NewsFeed = () => {
   const handlelogout = () => {
     localStorage.removeItem("UserID")
   }
+  const handelpostid = (index, postid) => {
+    setPostId(postid);
+    fetchComments();
+    setCommentscount(Comments.length);
+  }
+  const handelcount = () =>{
+    setCommentscount('')
+  }
+  const fetchUserDatas = async (name) => {
+    try {
+      const url = `https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getUserByName`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
 
+        body: JSON.stringify({
+          name: name
+        })
+      });
+      const datas = await response.json();
+      const extractedRealNames = datas.map(user => user.RealName);
+      setRealNames(extractedRealNames);
+      const extractedUserID = datas.map(user => user.UserID);
+      setUser_ids(extractedUserID);
 
+      console.log("datas:", datas)
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+
+      console.log(error)
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setName(e.target.value);
+    fetchUserDatas(name);
+  };
   return (
 
-    <div className="app">
+    <div className="appnewsfeed">
       <div className="header">
         <div className="logo-container">
-          <img src="https://cdn.discordapp.com/attachments/1195301143161606205/1195301598507827240/techst_logo_rz_white.png?ex=65b37e5c&is=65a1095c&hm=951cba6cabd865ab2f4e7c4fd8e295c18bb4f3b9a3474d434849184a84fcbd48&" alt="Logo" className="logo" />
+          <img src={logo} alt="Logo" className="logo" />
         </div>
         <div className="search-bar">
-          <input type="text" placeholder="Search..." className="search-bar-input" />
-          <button>Search</button>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="search-bar-input"
+            value={name}
+            onChange={handleInputChange}
+
+          />
+          <button >Search</button>
         </div>
         <div className="user-info-container">
           <div className="user-photo">
@@ -266,6 +330,19 @@ const NewsFeed = () => {
           </div>
         </div>
       </div>
+      <div className={searchliste}>
+
+        <ul>
+          {realNames.slice(-1000).map((name, index) => (
+            <li key={index}>
+              <div>
+                <a href={`/profil/${user_ids.slice(-1000)[index]}`}>{name}</a>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+      </div>
 
       <div className="chat-container">
         <div className="Posts-container">
@@ -274,7 +351,7 @@ const NewsFeed = () => {
           ) : (
             Posts.slice(-1000).map((post, index) => (
 
-              <div className="message" key={index}>
+              <div className="message" key={index} onMouseOver={() => handelpostid(index, post.id)} onMouseDown={handelcount}>
                 <div className='user'>
                   <img src={userphotos[post.user_id]} width='30px'></img>
                   <a href={"/profil/" + post.user_id}>
@@ -294,7 +371,7 @@ const NewsFeed = () => {
                   <img src={post.MediaLink} className="post-media" />
                 </div>
                 <div className="comment-button" onClick={() => handleToggle(index, post.id)}>
-                  <p>Comments</p>
+                  <p>Comments {Commentscount}</p>
                 </div>
                 {showComments === index && (
                   <div className="comments-container">

@@ -1,0 +1,12 @@
+{
+    "function_name": "getUserByName",
+    "http_methode": "POST",
+    "route": "getUserByName",
+    "meta": { 
+        "package_type": "zip",
+        "tags": {
+            "environment": "dev",
+            "deploy": "terraform"
+            } 
+        }
+}

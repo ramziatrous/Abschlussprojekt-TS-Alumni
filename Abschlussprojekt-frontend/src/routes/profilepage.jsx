@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../profile.css';
 import { useNavigate } from 'react-router-dom';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import logo from '../assets/logo.png';
 
 
 const Profile = () => {
@@ -26,6 +27,8 @@ const Profile = () => {
     const [newcomment, setNewcomment] = useState('');
     const [postId, setPostId] = useState(null);
     const [currentClassName, setCurrentClassName] = useState('input-container');
+    const [searchliste, setSearchListe] = useState('nicht');
+    const [edit,setEdit] = useState('edit');
     const [userData, setUserData] = useState({
         RealName: '',
         EmailAddress: '',
@@ -33,10 +36,42 @@ const Profile = () => {
         Course: '',
         ProfileImg: '',
     });
-    const [realName, setRealName] = useState('');
-    const [userId, setUserId] = useState('');
+    const [realNames, setRealNames] = useState([]);
+    const [user_ids, setUser_ids] = useState([])
+    const [name, setName] = useState('');
+    const [userDataFetched, setUserDataFetched] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [newBirthdate, setNewBirthdate] = useState(userData.BirthDate);
+    const [newCourse, setNewCourse] = useState(userData.Course);
     useEffect(() => {
 
+        const fetchUserData = async () => {
+
+            try {
+                var match = window.location.href.match(/\/([^\/]+)$/);
+                var user_id = match ? match[1] : null;
+                const response = await fetch(`https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getPosts/${user_id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+
+                // console.log(data);
+
+                if (data.status === 'ok') {
+                    setPosts(data.posts);
+                } else {
+                    console.error('Error fetching user data', data);
+                }
+            } catch (error) {
+                console.error('Network error', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
 
         const isconnected = async () => {
@@ -46,22 +81,14 @@ const Profile = () => {
                 if (!user_id) {
                     navigate("/");
                 } else {
-                    if (userId) {
-                        const fetchUserDatas = async () => {
-                            try {
-                                const response = await axios.get(
-                                    `https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getUserById/${userId}`
-                                );
-                                setRealName(response.data.RealName);
-                            } catch (error) {
-                                console.error('Error fetching user data:', error);
-                            }
-                        };
+                    if (!userDataFetched) {
 
-                        fetchUserDatas();
+                        await fetchUserData();
+                        setUserDataFetched(true);
                     }
 
-                    const changeClassName = () => {
+
+                    const changeClassPostContainer = () => {
                         var match = window.location.href.match(/\/([^\/]+)$/);
                         var user_id = match ? match[1] : null;
                         var profil = localStorage.getItem("UserID");
@@ -74,33 +101,25 @@ const Profile = () => {
 
 
                     };
-                    const fetchUserData = async () => {
-
-                        try {
-                            var match = window.location.href.match(/\/([^\/]+)$/);
-                            var user_id = match ? match[1] : null;
-                            const response = await fetch(`https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getPosts/${user_id}`, {
-                                method: 'GET',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                            });
-
-                            const data = await response.json();
-
-                            // console.log(data);
-
-                            if (data.status === 'ok') {
-                                setPosts(data.posts);
-                            } else {
-                                console.error('Error fetching user data', data);
-                            }
-                        } catch (error) {
-                            console.error('Network error', error);
-                        } finally {
-                            setIsLoading(false);
+                    const changeClassSearchListe = (name) => {
+                        if (name == '') {
+                            setSearchListe("nicht");
+                        } else {
+                            setSearchListe("search-liste");
                         }
                     };
+                    const changeClassEdit = () => {
+                        var match = window.location.href.match(/\/([^\/]+)$/);
+                            var user_id = match[1];
+                            var editUser =localStorage.getItem("UserID")
+
+                        if (user_id ==  editUser) {
+                            setEdit("edit");
+                        } else {
+                            setEdit("nicht");
+                        }
+                    };
+                    
 
                     const getUser = async () => {
                         try {
@@ -176,17 +195,16 @@ const Profile = () => {
                                 });
                             const userData = await response.json()
                             setUserData(userData)
-                            console.log(userData)
+                            // console.log(userData)
                         } catch (error) {
                             console.error("Fehler beim Bearbeiten des Profils", error);
                         }
                     };
-
-
-                    getuserdata()
-                    changeClassName()
-                    fetchUserData();
+                    changeClassEdit();
+                    getuserdata();
+                    changeClassPostContainer();
                     getUser();
+                    changeClassSearchListe(realNames)
                     fetchUserUserData(Posts.map((post) => post.user_id));
                     fetchcommentUserData(Comments.map((comment) => comment.UserID));
 
@@ -197,10 +215,27 @@ const Profile = () => {
             }
         };
         isconnected();
-    }, [Posts]);
+    }, [Posts, setUserDataFetched, Comments, name, realNames]);
 
 
-
+    const getuserdata = async () => {
+        try {
+            var match = window.location.href.match(/\/([^\/]+)$/);
+            var user_id = match[1];
+            'const user_id = localStorage.getItem("UserID");'
+            const url = 'https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getUser/' + user_id
+            const response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                });
+            const userData = await response.json()
+            setUserData(userData)
+            // console.log(userData)
+        } catch (error) {
+            console.error("Fehler beim Bearbeiten des Profils", error);
+        }
+    };
 
     const handleSendMessage = async () => {
         try {
@@ -218,7 +253,7 @@ const Profile = () => {
 
             const data = await response.json();
 
-            console.log('Data:', data);
+            // console.log('Data:', data);
             setNewMessage('')
         } catch (error) {
             console.error('Network error', error);
@@ -241,7 +276,7 @@ const Profile = () => {
 
             const data = await response.json();
 
-            console.log('Data:', data);
+            // console.log('Data:', data);
 
             setNewcomment('');
             handleToggle(null, postId);
@@ -298,42 +333,139 @@ const Profile = () => {
     const handelnewsfeed = () => {
         navigate("/newsfeed");
     }
-    // const handeluserid = () => {
-    //     var match = window.location.href.match(/\/([^\/]+)$/);
-    //     var user_id = match ? match[1] : null;
-    //     return (user_id)
-    // }
+
+    const handelpostid = (index, postid) => {
+        setPostId(postid);
+    }
     const handleSearch = () => {
-        // Perform search logic here, e.g., filtering a list of users based on input value
+
         console.log('Searching for user with ID:', userId);
-      };
+    };
+
+    const fetchUserDatas = async (name) => {
+        try {
+            const url = `https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getUserByName`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+
+                body: JSON.stringify({
+                    name: name
+                })
+            });
+            const datas = await response.json();
+            const extractedRealNames = datas.map(user => user.RealName);
+            setRealNames(extractedRealNames);
+            const extractedUserID = datas.map(user => user.UserID);
+            setUser_ids(extractedUserID);
+
+            console.log("datas:", datas)
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+
+            console.log(error)
+        }
+    };
+
+    const handleInputChange = (e) => {
+        setName(e.target.value);
+        fetchUserDatas(name);
+    };
+
+    const handleUpdateProfile = async () => {
+        try {
+
+            const response = await fetch('https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/updateUser', {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "user_id": localStorage.getItem("UserID"),
+                    "BirthDate": newBirthdate,
+                    "Course": newCourse
+
+                })
+            });
+        } catch (error) {
+            console.error("Fehler beim Senden der Daten an das Backend.", error);
+        }
+
+    };
+    const handleEditClick = () => {
+        setEditMode(true);
+    };
+
+    const handleSaveClick = () => {
+        handleUpdateProfile();
+        setNewBirthdate(userData.BirthDate);
+        setNewCourse(userData.Course);
+
+        setEditMode(false);
+    };
+
+    const handleCancelClick = () => {
+        setNewBirthdate(userData.BirthDate);
+        setNewCourse(userData.Course);
+        setEditMode(false);
+    };
+
+
     return (
 
-        <div className="app">
+        <div className="appprofile">
             <div className="sidebar">
                 <Sidebar >
                     <Menu>
                         <MenuItem><img src={userData.ProfileImg} className='logos'></img>  </MenuItem>
                         <MenuItem>Name: {userData.RealName} </MenuItem>
-                        <MenuItem>Birthdate: {userData.BirthDate} </MenuItem>
-                        <MenuItem>Course:  {userData.Course} </MenuItem>
+                        <MenuItem>
+                            Birthdate: {editMode ? (
+                                <input
+                                    type='date'
+                                    value={newBirthdate}
+                                    onChange={(e) => setNewBirthdate(e.target.value)}
+                                />
+                            ) : (
+                                userData.BirthDate
+                            )}
+                        </MenuItem>
+                        <MenuItem>
+                            Course: {editMode ? (
+                                <input
+                                    type='text'
+                                    value={newCourse}
+                                    onChange={(e) => setNewCourse(e.target.value)}
+                                />
+                            ) : (
+                                userData.Course
+                            )}
+                        </MenuItem>
+                        <MenuItem className={edit}>
+                            {editMode ? (
+                                <>
+                                    <button onClick={handleSaveClick}>Save</button>
+                                    <button onClick={handleCancelClick}>Cancel</button>
+                                </>
+                            ) : (
+                                <button onClick={handleEditClick}>Edit</button>
+                            )}
+                        </MenuItem>
                     </Menu>
                 </Sidebar>
             </div>
             <div className="header">
                 <div className="logo-container">
-                    <img src="https://cdn.discordapp.com/attachments/1195301143161606205/1195301598507827240/techst_logo_rz_white.png?ex=65b37e5c&is=65a1095c&hm=951cba6cabd865ab2f4e7c4fd8e295c18bb4f3b9a3474d434849184a84fcbd48&" alt="Logo" className="logo" onClick={handelnewsfeed} />
+                    <img src={logo} alt="Logo" className="logo" onClick={handelnewsfeed} />
                 </div>
                 <div className="search-bar">
                     <input
                         type="text"
                         placeholder="Search..."
                         className="search-bar-input"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
+                        value={name}
+                        onChange={handleInputChange}
+
                     />
                     <button onClick={handleSearch}>Search</button>
-                    {realName && <p>Real Name: {realName}</p>}
                 </div>
                 <div className="user-info-container">
                     <div className="user-photo">
@@ -350,6 +482,19 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+            <div className={searchliste}>
+
+                <ul>
+                    {realNames.slice(-1000).map((name, index) => (
+                        <li key={index}>
+                            <div>
+                                <a href={`/profil/${user_ids.slice(-1000)[index]}`}>{name}</a>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+
+            </div>
 
             <div className="chat-container">
                 <div className="Posts-container">
@@ -358,7 +503,7 @@ const Profile = () => {
                     ) : (
                         Posts.slice(-1000).map((post, index) => (
 
-                            <div className="message" key={index}>
+                            <div className="message" key={index} onMouseOver={() => handelpostid(index, post.id)}>
                                 <div className='user'>
                                     <img src={userphotos[post.user_id]} width='30px'></img>
                                     <a href={"/profil/" + post.user_id}>
