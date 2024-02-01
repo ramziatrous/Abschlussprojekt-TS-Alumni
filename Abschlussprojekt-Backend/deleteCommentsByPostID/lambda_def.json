@@ -1,0 +1,12 @@
+{
+    "function_name": "deleteCommentsByPostID",
+    "http_methode": "DELETE",
+    "route": "deleteComments/{post_id}",
+    "meta": { 
+        "package_type": "zip",
+        "tags": {
+            "environment": "dev",
+            "deploy": "terraform"
+            } 
+        }
+}
