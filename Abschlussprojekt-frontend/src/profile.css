@@ -276,13 +276,38 @@ color: #010b1f;
   border-radius: 10px;
   margin-top: 2cap;
 }
+/* delete icon profile*/
+.appprofile .delete{
+  margin-left: 60% ;
+}
+.appprofile .delete fa-trash {
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+}
 
 @media screen and (max-width: 600px) {
   .appprofile .input-container {
     flex-direction: column;
     align-items: stretch;
   }
+
+  .appprofile .input-container textarea {
+    width: 90%; 
+    margin-bottom: 10px;
+  }
+
+  .appprofile .input-container .upload-button {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .appprofile .input-container .send-button {
+    margin-right: 10;
+    width: 90%;
+  }
   .appprofile .sidebar {
+
     display: none;
   }
   .appprofile .comment-button {
@@ -293,5 +318,8 @@ color: #010b1f;
   }
   .appprofile .search-bar {
     display: none;
+  }
+  .appprofile .delete{
+    margin-left: 20% ;
   }
 }

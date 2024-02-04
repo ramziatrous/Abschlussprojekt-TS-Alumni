@@ -154,6 +154,16 @@
   margin-right: 10px;
   border-radius: 50%;
 }
+/* delete icon newsfeed*/
+.appnewsfeed .delete{
+  margin-left: 60% ;
+}
+.appnewsfeed .delete fa-trash {
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
 
 /* User Message Paragraph Styles */
 .appnewsfeed .message .user p {
@@ -301,9 +311,25 @@
 /* Media Query for Small Screens */
 @media screen and (max-width: 600px) {
   .appnewsfeed .input-container {
-        flex-direction: column;
+    flex-direction: column;
     align-items: stretch;
   }
+
+  .appnewsfeed .input-container textarea {
+    width: 90%; 
+    margin-bottom: 10px;
+  }
+
+  .appnewsfeed .input-container .upload-button {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .appnewsfeed .input-container .send-button {
+    margin-right: 10;
+    width: 90%;
+  }
+
   .appnewsfeed .sidebar {
     display: none;
   }
@@ -315,5 +341,8 @@
   }
   .appnewsfeed .search-bar {
     display: none;
+  }
+  .appnewsfeed .delete{
+    margin-left: 20% ;
   }
 }

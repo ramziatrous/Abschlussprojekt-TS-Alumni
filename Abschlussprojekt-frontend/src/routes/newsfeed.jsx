@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../newsfeed.css';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const NewsFeed = () => {
   const [Posts, setPosts] = useState([]);
@@ -30,7 +31,7 @@ const NewsFeed = () => {
   const [user_ids, setUser_ids] = useState([])
   const [name, setName] = useState('');
   const [searchliste, setSearchListe] = useState('nicht');
-  const [Commentscount,setCommentscount] = useState('')
+
   const fetchUserData = async () => {
 
     try {
@@ -40,12 +41,7 @@ const NewsFeed = () => {
           'Content-Type': 'application/json',
         },
       });
-
       const data = await response.json();
-
-      // console.log(data);
-
-
       if (data.status === 'ok') {
         setPosts(data.posts);
 
@@ -58,12 +54,20 @@ const NewsFeed = () => {
       setIsLoading(false);
     }
   };
-  // console.log(Posts)
+
+  const intervalIdRef = useRef(null);
+  const startFetchInterval = () => {
+    const intervalId = setInterval(() => {
+      fetchUserData();
+    }, 180000);
+    intervalIdRef.current = intervalId;
+  };
+  const stopFetchInterval = () => {
+    clearInterval(intervalIdRef.current);
+  };
+
   useEffect(() => {
-
-
     const isconnected = async () => {
-
       try {
         const user_id = localStorage.getItem("UserID");
         if (!user_id) {
@@ -74,8 +78,7 @@ const NewsFeed = () => {
             await fetchUserData();
             setUserDataFetched(true);
           }
-
-
+          startFetchInterval();
 
           const fetchUserUserData = async (postUserIds) => {
             try {
@@ -130,23 +133,20 @@ const NewsFeed = () => {
 
           };
 
-
-
           getUser();
           changeClassSearchListe(name)
-
           fetchUserUserData(Posts.map((post) => post.user_id));
           fetchcommentUserData(Comments.map((comment) => comment.UserID));
-
+          return () => {
+            stopFetchInterval();
+          };
         }
-
       } catch (error) {
         console.error('auth error', error);
       }
     };
     isconnected();
   }, [Posts, setUserDataFetched, Comments, name, realNames]);
-
 
   const getUser = async () => {
     try {
@@ -159,8 +159,6 @@ const NewsFeed = () => {
         });
       const userData = await response.json()
       setUser(userData)
-      // console.log(userData)
-
     } catch (error) {
       console.error("Fehler beim Bearbeiten des Profils", error);
     }
@@ -181,9 +179,8 @@ const NewsFeed = () => {
       });
 
       const data = await response.json();
-
-      // console.log('Data:', data);
       setNewMessage('')
+      fetchUserData()
     } catch (error) {
       console.error('Network error', error);
     }
@@ -204,8 +201,6 @@ const NewsFeed = () => {
       });
 
       const data = await response.json();
-
-      // console.log('Data:', data);
       fetchUserData();
       setNewcomment('');
       handleToggle(null, postId);
@@ -214,8 +209,6 @@ const NewsFeed = () => {
       console.error('Network error', error);
     }
   }
-
-
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -233,41 +226,105 @@ const NewsFeed = () => {
         headers: { 'Content-Type': 'application/json' },
       });
       const CommentsData = await response.json();
-
-
       if (CommentsData.status === 'ok') {
         setComments(CommentsData.comments);
-
+        
       } else {
         console.error('Error fetching user data', CommentsData);
       }
-
-
-
     } catch (error) {
       console.error('Error fetching user real names', error);
     }
   };
+
+  const deletePost = async (postId) => {
+    try {
+
+      const Post = async () => {
+        try {
+          const response = await fetch(`https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/deletePost/${postId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          fetchUserData()
+        } catch (error) {
+          console.error('Netzwerkfehler', error);
+        }
+      };
+      const deleteComments = async () => {
+        try {
+          const response = await fetch(`https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/deleteComments/${postId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data =  await response.json();
+          if (data.status === 'ok') {
+            await Post()
+            fetchUserData()
+          }
+        } catch (error) {
+          console.error('Netzwerkfehler', error);
+        }
+      };
+      const fetchComments = async () => {
+        try {
+          const url = `https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getComments/${postId}`;
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          const CommentsData = await response.json();
+          if (CommentsData.status === 'ok') {
+            setComments(CommentsData.comments);
+            if (CommentsData.comments.length == "0"){
+              Post();
+            }else{
+              deleteComments();
+              
+            }
+          } else {
+            console.error('Error fetching user data', CommentsData);
+          }
+        } catch (error) {
+          console.error('Error fetching user real names', error);
+        }
+      };
+      fetchComments()
+    } catch (error) {
+      console.error('Netzwerkfehler', error);
+    }
+  };
+
+  const deletecomment = async (commentId) => {
+    try {
+      const response = await fetch(`https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/deleteComment/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      fetchComments()
+    } catch (error) {
+      console.error('Netzwerkfehler', error);
+    }
+  };
+
   const handleToggle = (index, postId) => {
     setShowComments(index === showComments ? null : index);
     setPostId(postId);
     fetchComments();
-
   };
-  const profil = () => {
-    navigate("/profil");
-  }
   const handlelogout = () => {
     localStorage.removeItem("UserID")
   }
   const handelpostid = (index, postid) => {
     setPostId(postid);
-    fetchComments();
-    setCommentscount(Comments.length);
   }
-  const handelcount = () =>{
-    setCommentscount('')
-  }
+
   const fetchUserDatas = async (name) => {
     try {
       const url = `https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/getUserByName`;
@@ -284,11 +341,8 @@ const NewsFeed = () => {
       setRealNames(extractedRealNames);
       const extractedUserID = datas.map(user => user.UserID);
       setUser_ids(extractedUserID);
-
-      console.log("datas:", datas)
     } catch (error) {
       console.error('Error fetching user data:', error);
-
       console.log(error)
     }
   };
@@ -297,12 +351,13 @@ const NewsFeed = () => {
     setName(e.target.value);
     fetchUserDatas(name);
   };
+
   return (
 
     <div className="appnewsfeed">
       <div className="header">
         <div className="logo-container">
-          <img src={logo} alt="Logo" className="logo" />
+          <img src={logo}  className="logo" />
         </div>
         <div className="search-bar">
           <input
@@ -317,7 +372,7 @@ const NewsFeed = () => {
         </div>
         <div className="user-info-container">
           <div className="user-photo">
-            <img src={user.ProfileImg} alt="User Photo" />
+            <img src={user.ProfileImg}  />
           </div>
           <div className="user-details" >
             <div className="dropdown-container">
@@ -351,7 +406,7 @@ const NewsFeed = () => {
           ) : (
             Posts.slice(-1000).map((post, index) => (
 
-              <div className="message" key={index} onMouseOver={() => handelpostid(index, post.id)} onMouseDown={handelcount}>
+              <div className="message" key={index} onMouseOver={() => handelpostid(index, post.id)} >
                 <div className='user'>
                   <img src={userphotos[post.user_id]} width='30px'></img>
                   <a href={"/profil/" + post.user_id}>
@@ -359,8 +414,11 @@ const NewsFeed = () => {
                   </a>
                   <div className="space-between"></div>
                   <p >
-                    <strong>{post.CreatedAt}</strong>
+                    {post.CreatedAt}
                   </p>
+                  {localStorage.getItem("UserID") === post.user_id && (
+                    <FontAwesomeIcon className='delete' icon={faTrash} onClick={() => deletePost(post.id)} />
+                  )}
                 </div>
                 <div className="post">
                   <p>
@@ -371,8 +429,9 @@ const NewsFeed = () => {
                   <img src={post.MediaLink} className="post-media" />
                 </div>
                 <div className="comment-button" onClick={() => handleToggle(index, post.id)}>
-                  <p>Comments {Commentscount}</p>
+                  <p>Comments </p>
                 </div>
+
                 {showComments === index && (
                   <div className="comments-container">
                     <div className="comments">
@@ -381,15 +440,17 @@ const NewsFeed = () => {
                       ) : (
                         Comments.slice(-1000).map((comment, index) => (
                           <div className="comment" key={index}>
-
                             <div className='commentuser'>
                               <img src={commentphotos[comment.UserID]} width='30px'></img>
                               <a href={"/profil/" + post.user_id}>
                                 <strong>{commentRealNames[comment.UserID]}</strong>
                               </a>
                               <p >
-                                <strong>{comment.CreatedAt}</strong>
+                                {comment.CreatedAt}
                               </p>
+                              {localStorage.getItem("UserID") === comment.UserID && (
+                                <FontAwesomeIcon icon={faTrash} onClick={() => deletecomment(comment.CommentID)} />
+                              )}
                             </div>
                             <div className="comment-text">
                               <p>
@@ -436,6 +497,7 @@ const NewsFeed = () => {
 
     </div>
   );
+
 };
 
 export default NewsFeed;

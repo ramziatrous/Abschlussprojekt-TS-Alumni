@@ -13,7 +13,6 @@ function LoginGoogle() {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       const data = await response.json();
-      console.log("Google Data:", data);
       return data;
     } catch (error) {
       console.error("Fehler beim Abrufen von Google-Benutzerdaten.", error);
@@ -29,10 +28,7 @@ function LoginGoogle() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ accessToken: accessToken })
       });
-
       const responseFetch = await response.json();
-      console.log("responseData from googlefetch", responseFetch);
-
       const responseToBackend = await fetch(
         "https://845d97vw4k.execute-api.eu-central-1.amazonaws.com/login/google",
         {
@@ -43,8 +39,6 @@ function LoginGoogle() {
       );
 
       const responseData = await responseToBackend.json();
-      console.log("data From backend login google", responseData)
-
       setUserData(responseData);
 
       ///   SessionData und UserID ins LocalStorage speichern ///
@@ -63,7 +57,6 @@ function LoginGoogle() {
       else {
         var data = JSON.parse(responseData.user);
         var userID = data[0][0].UserID;
-        console.log("userID ",userID)
         localStorage.setItem("UserID", userID);
       }
 
