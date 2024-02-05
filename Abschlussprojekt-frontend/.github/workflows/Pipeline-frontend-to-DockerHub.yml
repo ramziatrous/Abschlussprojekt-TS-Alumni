@@ -19,8 +19,7 @@ jobs:
       - name: Build Docker Image
         id: build-image
         run: |
-          ls -la
-          docker build -t aws2302/aws2302 -f docker/Dockerfile $GITHUB_WORKSPACE
+          docker build -t aws2302/aws2302 -f docker/Dockerfile $GITHUB_WORKSPACE/docker
           echo "::set-output name=image-name::aws2302/aws2302"
 
       - name: Login to Docker Hub
@@ -38,12 +37,6 @@ jobs:
         run: |
           echo "[$(date -u)] Tagging Docker image..."
           docker tag aws2302/aws2302:latest "${{ secrets.DOCKERHUB_USERNAME }}/aws2302:latest"
-          if [ $? -eq 0 ]; then
-            echo "[$(date -u)] Tagged Docker image successfully"
-          else
-            echo "[$(date -u)] Error: Failed to tag Docker image"
-            exit 1
-          fi
 
       - name: Push Docker image
         run: |
@@ -84,4 +77,24 @@ jobs:
       - name: List S3 Buckets
         run: aws s3 ls --region eu-central-1 --profile 048479317518_Student
 
-        ##
+      - name: SSH and Docker Workflow
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTNAME }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            echo "** Checking for existing container..."
+            CONTAINER_ID=$(docker ps -aqf "name=frontend")
+            if [ -n "$CONTAINER_ID" ]; then
+             echo "** Stopping and removing existing container..."
+             docker stop "$CONTAINER_ID"
+             docker rm "$CONTAINER_ID"
+            fi
+            echo "** Pulling latest image..."
+            docker pull aws2302/aws2302:latest
+            echo "** Running new container..."
+            docker run --name frontend -d -p 80:80 -i aws2302/aws2302:latest
+
+          ###
